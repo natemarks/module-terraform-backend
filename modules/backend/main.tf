@@ -159,7 +159,7 @@ resource "aws_iam_role_policy_attachment" "replication" {
 
 
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name           = "terraform-lock"
+  name           = var.lock_table_name
   read_capacity  = 5
   write_capacity = 5
   hash_key       = "LockID"

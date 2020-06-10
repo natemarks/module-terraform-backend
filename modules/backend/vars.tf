@@ -19,3 +19,8 @@ variable "organization_id" {
   type = string
   default = "com.my-organization."
 }
+
+variable "lock_table_name" {
+  type = string
+  default = "terragrunt-lock-table"
+}
