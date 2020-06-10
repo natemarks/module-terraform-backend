@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "backend_bucket" {
     role = aws_iam_role.replication.arn
 
     rules {
-      id = "Terraform-State-Replication"
+      id = "Terragrunt-State-Replication"
       status = "Enabled"
       destination {
         bucket = aws_s3_bucket.replication_destination.arn
