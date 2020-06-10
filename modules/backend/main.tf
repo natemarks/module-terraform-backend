@@ -131,7 +131,7 @@ resource "aws_iam_policy" "replication" {
             ],
             "Effect": "Allow",
             "Resource": [
-                "arn:aws:s3:::${aws_s3_bucket.backend_bucket.id},
+                "arn:aws:s3:::${aws_s3_bucket.backend_bucket.id}",
                 "arn:aws:s3:::${aws_s3_bucket.backend_bucket.id}/*"
             ]
         },
