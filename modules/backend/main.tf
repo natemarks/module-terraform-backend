@@ -39,7 +39,7 @@ resource "aws_s3_bucket" "backend_bucket" {
   }
 
  tags = {
-    Name      = aws_s3_bucket.backend_bucket.id
+    Name      = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state"
     terraform = "true"
     terragrunt = "true"
   }
@@ -74,7 +74,7 @@ resource "aws_s3_bucket" "replication_destination" {
   }
 
   tags = {
-    Name      = aws_s3_bucket.replication_destination.id
+    Name      = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state-replication"
     terraform = "false"
   }
 }
