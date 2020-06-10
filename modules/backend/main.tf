@@ -21,7 +21,7 @@ provider "aws" {
 
 
 resource "aws_s3_bucket" "backend_bucket" {
-  bucket = "${var.organization_id}${var.aws_account_number}-terragrunt-remote-state"
+  bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state"
   acl    = "private"
   versioning {
     enabled = true
@@ -64,7 +64,7 @@ resource "aws_s3_bucket_public_access_block" "tfstate_backend_bucket_public_bloc
 
 
 resource "aws_s3_bucket" "replication_destination" {
-  bucket = "${var.organization_id}${var.aws_account_number}-terragrunt-remote-state-replication"
+  bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state-replication"
   acl    = "private"
   region   = var.s3_replication_destination_region
   provider = aws.repl_region
@@ -97,7 +97,7 @@ resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
 
 
 resource "aws_iam_role" "replication" {
-  name = "s3crr_${var.aws_account_number}-tf-remote-state-repl"
+  name = "s3crr_${var.aws_account_id}-tf-remote-state-repl"
   path   = "/service-role/"
 
   assume_role_policy = <<POLICY
@@ -118,7 +118,7 @@ POLICY
 }
 
 resource "aws_iam_policy" "replication" {
-  name = "s3crr_${var.aws_account_number}-tf-remote-state-repl"
+  name = "s3crr_${var.aws_account_id}-tf-remote-state-repl"
   path   = "/service-role/"
   policy = <<POLICY
 {
@@ -169,7 +169,7 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
     }
 
   tags = {
-    Name      = "lock-table-${var.aws_account_number}-terragrunt-remote-state"
+    Name      = "lock-table-${var.aws_account_id}-terragrunt-remote-state"
     terraform = "true"
     terragrunt = "true"
   }
