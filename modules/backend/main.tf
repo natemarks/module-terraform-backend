@@ -64,7 +64,7 @@ resource "aws_s3_bucket_public_access_block" "tfstate_backend_bucket_public_bloc
 
 
 resource "aws_s3_bucket" "replication_destination" {
-  bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state-replication"
+  bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
   acl    = "private"
   region   = var.s3_replication_destination_region
   provider = aws.repl_region
@@ -74,7 +74,7 @@ resource "aws_s3_bucket" "replication_destination" {
   }
 
   tags = {
-    Name      = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state-replication"
+    Name      = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
     terraform = "false"
   }
 }
