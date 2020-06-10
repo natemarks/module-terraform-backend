@@ -97,7 +97,7 @@ resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
 
 
 resource "aws_iam_role" "replication" {
-  name = "s3crr_${var.aws_account_id}-tf-remote-state-repl"
+  name = "s3crr_${var.aws_account_id}-terragrunt-repl"
   path   = "/service-role/"
 
   assume_role_policy = <<POLICY
@@ -118,7 +118,7 @@ POLICY
 }
 
 resource "aws_iam_policy" "replication" {
-  name = "s3crr_${var.aws_account_id}-tf-remote-state-repl"
+  name = "s3crr_${var.aws_account_id}-terragrunt-repl"
   path   = "/service-role/"
   policy = <<POLICY
 {
