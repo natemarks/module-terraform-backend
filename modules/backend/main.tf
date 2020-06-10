@@ -49,7 +49,7 @@ resource "aws_s3_bucket" "backend_bucket" {
 
 
 resource "aws_s3_bucket_public_access_block" "tfstate_backend_bucket_public_block" {
-  bucket = aws_s3_bucket.backend_bucket.id
+  bucket = aws_s3_bucket.backend_bucket.bucket
 
   block_public_acls   = true
   block_public_policy = true
@@ -81,7 +81,7 @@ resource "aws_s3_bucket" "replication_destination" {
 
 
 resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
-  bucket = aws_s3_bucket.replication_destination.id
+  bucket = aws_s3_bucket.replication_destination.bucket
 
   block_public_acls   = true
   block_public_policy = true
