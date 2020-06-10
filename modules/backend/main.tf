@@ -49,7 +49,7 @@ resource "aws_s3_bucket" "backend_bucket" {
 
 
 resource "aws_s3_bucket_public_access_block" "tfstate_backend_bucket_public_block" {
-  bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state"
+  bucket = aws_s3_bucket.backend_bucket.id
 
   block_public_acls   = true
   block_public_policy = true
@@ -82,7 +82,7 @@ resource "aws_s3_bucket" "replication_destination" {
 
 resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
   provider = aws.repl_region
-  bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
+  bucket = aws_s3_bucket.replication_destination.id
 
 
   block_public_acls   = true
