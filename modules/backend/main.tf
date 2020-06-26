@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "backend_bucket_secure_transport" {
 
 resource "aws_s3_bucket_policy" "disable_insecure_s3_communications" {
   bucket = aws_s3_bucket.backend_bucket.id
-  policy = "${data.aws_iam_policy_document.backend_bucket_secure_transport.json}"
+  policy = data.aws_iam_policy_document.backend_bucket_secure_transport.json
 }
 
 
