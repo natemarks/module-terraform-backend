@@ -13,6 +13,33 @@ provider "aws" {
 }
 
 
+# -------------------------------------------------------------------------------------
+# Add policy to require secure transport on the backend bucket
+# -------------------------------------------------------------------------------------
+data "aws_iam_policy_document" "backend_bucket_secure_transport" {
+  statement {
+    sid = "DenyInsecureCommunications"
+    actions = [
+      "s3:*"
+    ]
+    effect = "Deny"
+
+    resources = [
+      "${aws_s3_bucket.backend_bucket.arn}/*"
+    ]
+    condition {
+      test = "Bool"
+      values = ["false"]
+      variable = "aws:SecureTransport"
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "disable_insecure_s3_communications" {
+  bucket = "${aws_s3_bucket.backend_bucket.id}"
+  policy = "${data.aws_iam_policy_document.backend_bucket_secure_transport.json}"
+}
+
 
 # -------------------------------------------------------------------------------------
 # Create the s3 backend bucket and access_block
