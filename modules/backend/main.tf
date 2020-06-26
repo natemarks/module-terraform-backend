@@ -26,6 +26,10 @@ resource "aws_s3_bucket" "backend_bucket" {
   versioning {
     enabled = true
   }
+  logging {
+    target_bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state"
+    target_prefix = "TFStateLogs/"
+  }
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -79,10 +83,6 @@ resource "aws_s3_bucket" "replication_destination" {
 
   versioning {
     enabled = true
-  }
-  logging {
-    target_bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
-    target_prefix = "TFStateLogs/"
   }
   server_side_encryption_configuration {
     rule {
