@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "backend_bucket" {
     enabled = true
   }
   logging {
-    target_bucket = aws_s3_bucket.backend_bucket.id
+    target_bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
     target_prefix = "TFStateLogs/"
   }
   server_side_encryption_configuration {
@@ -85,7 +85,7 @@ resource "aws_s3_bucket" "replication_destination" {
     enabled = true
   }
   logging {
-    target_bucket = aws_s3_bucket.replication_destination.id
+    target_bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
     target_prefix = "TFStateLogs/"
   }
   server_side_encryption_configuration {
