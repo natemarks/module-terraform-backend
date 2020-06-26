@@ -26,6 +26,18 @@ resource "aws_s3_bucket" "backend_bucket" {
   versioning {
     enabled = true
   }
+  logging {
+    target_bucket = aws_s3_bucket.backend_bucket.id
+    target_prefix = "TFStateLogs/"
+  }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = "aws/s3"
+        sse_algorithm     = "aws:kms"
+      }
+    }
+  }
   replication_configuration {
     role = aws_iam_role.replication.arn
 
@@ -71,6 +83,18 @@ resource "aws_s3_bucket" "replication_destination" {
 
   versioning {
     enabled = true
+  }
+  logging {
+    target_bucket = aws_s3_bucket.replication_destination.id
+    target_prefix = "TFStateLogs/"
+  }
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = "aws/s3"
+        sse_algorithm     = "aws:kms"
+      }
+    }
   }
 
   tags = {
