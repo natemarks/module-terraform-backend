@@ -23,7 +23,10 @@ data "aws_iam_policy_document" "backend_bucket_secure_transport" {
       "s3:*"
     ]
     effect = "Deny"
-
+    principals {
+      identifiers = ["*"]
+      type = "*"
+    }
     resources = [
       "${aws_s3_bucket.backend_bucket.arn}/*"
     ]
