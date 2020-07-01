@@ -7,7 +7,5 @@ output "lock_table_name" {
 }
 
 output "replication_bucket_id" {
-  count = var.enable_replication_bucket ? 1 : 0
-
-  value = aws_s3_bucket.replication_destination[0].id
+  value = length(aws_s3_bucket.replication_destination) > 0 ? aws_s3_bucket.replication_destination[0].id : null
 }
