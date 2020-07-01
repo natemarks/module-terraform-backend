@@ -138,9 +138,10 @@ resource "aws_s3_bucket" "replication_destination" {
 resource "aws_s3_bucket_policy" "tls_for_replication_bucket" {
   count = var.enable_replication_bucket ? 1 : 0
 
-  bucket = aws_s3_bucket.replication_destination.id
+  bucket = aws_s3_bucket.replication_destination[0].id
   policy = data.aws_iam_policy_document.backend_bucket_secure_transport.json
 }
+
 resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
   count = var.enable_replication_bucket ? 1 : 0
 
@@ -212,7 +213,7 @@ resource "aws_iam_policy" "replication" {
                 "s3:GetObjectVersionTagging"
             ],
             "Effect": "Allow",
-            "Resource": "arn:aws:s3:::${aws_s3_bucket.replication_destination.id}/*"
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.replication_destination[0].id}/*"
         }
     ]
 }
@@ -223,8 +224,8 @@ POLICY
 resource "aws_iam_role_policy_attachment" "replication" {
   count = var.enable_replication_bucket ? 1 : 0
 
-  role       = aws_iam_role.replication.name
-  policy_arn = aws_iam_policy.replication.arn
+  role       = aws_iam_role.replication[0].name
+  policy_arn = aws_iam_policy.replication[0].arn
 }
 
 
