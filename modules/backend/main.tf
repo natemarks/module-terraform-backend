@@ -70,6 +70,8 @@ resource "aws_s3_bucket" "backend_bucket" {
     }
   }
   replication_configuration {
+    count = var.enable_replication_bucket ? 1 : 0
+
     role = aws_iam_role.replication[0].arn
 
     rules {
