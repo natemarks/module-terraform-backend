@@ -70,13 +70,13 @@ resource "aws_s3_bucket" "backend_bucket" {
     }
   }
   replication_configuration {
-    role = aws_iam_role.replication.arn
+    role = aws_iam_role.replication[0].arn
 
     rules {
       id = "Terragrunt-State-Replication"
       status = "Enabled"
       destination {
-        bucket = aws_s3_bucket.replication_destination.arn
+        bucket = aws_s3_bucket.replication_destination[0].arn
       }
     }
   }
@@ -145,7 +145,7 @@ resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
   count = var.enable_replication_bucket ? 1 : 0
 
   provider = aws.repl_region
-  bucket = aws_s3_bucket.replication_destination.id
+  bucket = aws_s3_bucket.replication_destination[0].id
 
 
   block_public_acls   = true

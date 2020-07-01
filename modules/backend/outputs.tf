@@ -7,5 +7,5 @@ output "lock_table_name" {
 }
 
 output "replication_bucket_id" {
-  value = aws_s3_bucket.replication_destination.id
+  value = aws_s3_bucket.replication_destination[0].id
 }
