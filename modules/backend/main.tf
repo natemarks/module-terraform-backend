@@ -28,7 +28,8 @@ data "aws_iam_policy_document" "backend_bucket_secure_transport" {
       type = "*"
     }
     resources = [
-      "${aws_s3_bucket.backend_bucket.arn}/*"
+      "${aws_s3_bucket.backend_bucket.arn}/*",
+      "${aws_s3_bucket.backend_bucket.arn}"
     ]
     condition {
       test = "Bool"
@@ -80,11 +81,12 @@ resource "aws_s3_bucket" "backend_bucket" {
     }
   }
 
- tags = {
+ tags = merge({
     Name      = "${var.organization_id}${var.aws_account_id}-terragrunt-remote-state"
     terraform = "true"
     terragrunt = "true"
-  }
+  },
+ var.custom_tags)
 
 }
 
@@ -106,6 +108,8 @@ resource "aws_s3_bucket_public_access_block" "tfstate_backend_bucket_public_bloc
 
 
 resource "aws_s3_bucket" "replication_destination" {
+  count = var.enable_replication_bucket ? 1 : 0
+
   bucket = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
   acl    = "private"
   region   = var.s3_replication_destination_region
@@ -117,20 +121,29 @@ resource "aws_s3_bucket" "replication_destination" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "aws/s3"
-        sse_algorithm     = "aws:kms"
+        sse_algorithm     = "AES256"
       }
     }
   }
 
-  tags = {
+ tags = merge({
     Name      = "${var.organization_id}${var.aws_account_id}-terragrunt-repl"
-    terraform = "false"
-  }
+    terraform = "true"
+    terragrunt = "true"
+  },
+ var.custom_tags)
 }
 
 
+resource "aws_s3_bucket_policy" "tls_for_replication_bucket" {
+  count = var.enable_replication_bucket ? 1 : 0
+
+  bucket = aws_s3_bucket.replication_destination.id
+  policy = data.aws_iam_policy_document.backend_bucket_secure_transport.json
+}
 resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
+  count = var.enable_replication_bucket ? 1 : 0
+
   provider = aws.repl_region
   bucket = aws_s3_bucket.replication_destination.id
 
@@ -149,6 +162,8 @@ resource "aws_s3_bucket_public_access_block" "tfstate_repl_public_block" {
 
 
 resource "aws_iam_role" "replication" {
+  count = var.enable_replication_bucket ? 1 : 0
+
   name = "s3crr_${var.aws_account_id}-terragrunt-repl"
   path   = "/service-role/"
 
@@ -170,6 +185,8 @@ POLICY
 }
 
 resource "aws_iam_policy" "replication" {
+  count = var.enable_replication_bucket ? 1 : 0
+
   name = "s3crr_${var.aws_account_id}-terragrunt-repl"
   path   = "/service-role/"
   policy = <<POLICY
@@ -204,6 +221,7 @@ POLICY
 
 
 resource "aws_iam_role_policy_attachment" "replication" {
+  count = var.enable_replication_bucket ? 1 : 0
 
   role       = aws_iam_role.replication.name
   policy_arn = aws_iam_policy.replication.arn
